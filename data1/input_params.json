@@ -1,0 +1,30 @@
+{
+    "model_info": {
+        "input_onnx_file": "/data1/model57/model57.h5.onnx",
+        "model_inputs": [
+            {
+                "model_input_name": "input_1_o0",
+                "input_image_folder": "/data1/model57/images"
+            }
+        ]
+    },
+    "preprocess": {
+        "img_preprocess_method": "kneron",
+        "img_channel": "RGB",
+        "radix": 8,
+        "keep_aspect_ratio": true,
+        "pad_mode": 1,
+        "p_crop": {
+            "crop_x": 0,
+            "crop_y": 0,
+            "crop_w": 0,
+            "crop_h": 0
+        }
+    },
+    "simulator_img_files": [
+        {
+            "model_input_name": "input_1_o0",
+            "input_image": "/data1/Model3/images/man.bmp"
+        }
+    ]
+}
