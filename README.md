@@ -323,6 +323,6 @@
 
   結果如下
 
-  ![result](https://github.com/kung-bill/kl520_image_test/result.png)
+  ![result](https://raw.githubusercontent.com/kung-bill/kl520_image_test/master/result.png)
 
 * 可以試試看不同圖片的結果，有些結果差異很大，有些很小
