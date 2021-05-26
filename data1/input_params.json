@@ -24,7 +24,7 @@
     "simulator_img_files": [
         {
             "model_input_name": "input_1_o0",
-            "input_image": "/data1/Model3/images/man.bmp"
+            "input_image": "/data1/model57/images/man.bmp"
         }
     ]
 }
