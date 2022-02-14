@@ -1,10 +1,10 @@
 {
     "model_info": {
-        "input_onnx_file": "/data1/model57/model57.h5.onnx",
+        "input_onnx_file": "/data1/model01/model01.h5.onnx",
         "model_inputs": [
             {
                 "model_input_name": "input_1_o0",
-                "input_image_folder": "/data1/model57/images"
+                "input_image_folder": "/data1/model01/images"
             }
         ]
     },
@@ -24,7 +24,7 @@
     "simulator_img_files": [
         {
             "model_input_name": "input_1_o0",
-            "input_image": "/data1/model57/images/man.bmp"
+            "input_image": "/model01/model01/images/birdman.bmp"
         }
     ]
 }

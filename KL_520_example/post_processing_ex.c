@@ -1,9 +1,12 @@
-/*
- * Kneron Example Post-Processing driver
+/**
+ * @file        post_processing_ex.c
+ * @brief       Kneron Example Post-Processing driver
+ * @version     0.1
+ * @date        2021-03-22
  *
- * Copyright (C) 2018-2019 Kneron, Inc. All rights reserved.
- *
+ * @copyright   Copyright (c) 2018-2021 Kneron Inc. All rights reserved.
  */
+
  
 #include <stdlib.h>
 #include <string.h>
@@ -50,6 +53,7 @@ struct yolo_v3_post_globals_s {
 struct imagenet_post_globals_s {
     struct imagenet_result_s  temp[IMAGENET_CLASSES_MAX];
 };
+
 
 union post_globals_u_s {
     struct yolo_v3_post_globals_s     yolov3;
@@ -417,47 +421,6 @@ static int inet_comparator(const void *pa, const void *pb)
     return float_comparator(a, b);
 }
 
-// 2021/05/26 modify
-int post_processing_simple(int model_id, struct kdp_image_s *image_p, float* fres, int* fres_len)
-{
-    struct imagenet_post_globals_s *gp = &u_globals.imgnet;
-    uint8_t *result_p;
-    int i, len, data_size, div;
-    float scale;
-
-    data_size = (POSTPROC_OUTPUT_FORMAT(image_p) & BIT(0)) + 1;     /* 1 or 2 in bytes */
-
-    int8_t *src_p = (int8_t *)POSTPROC_OUT_NODE_ADDR(image_p, 0);
-    int grid_w = POSTPROC_OUT_NODE_COL(image_p, 0);
-    len = grid_w * data_size;
-    int grid_w_bytes_aligned = round_up(len);
-    int w_bytes_to_skip = grid_w_bytes_aligned - len;
-    len = grid_w_bytes_aligned;
-
-    int ch = POSTPROC_OUT_NODE_CH(image_p, 0);
-    fres_len[0] = ch;
-
-    /* Convert to float */
-    scale = POSTPROC_OUT_NODE_SCALE(image_p, 0);
-    div = 1 << POSTPROC_OUT_NODE_RADIX(image_p, 0);
-    for (i = 0; i < ch; i++) {
-        gp->temp[i].index = i;
-        gp->temp[i].score = (float)*src_p;
-        gp->temp[i].score = do_div_scale(gp->temp[i].score, div, scale);
-        //printf("saving %.5f, \n", gp->temp[i].score);
-        fres[i] = gp->temp[i].score;
-        src_p += data_size + w_bytes_to_skip;
-    }
-
-    //softmax(gp->temp, ch);
-    //qsort(gp->temp, ch, sizeof(struct imagenet_result_s), inet_comparator);
-
-    result_p = (uint8_t *)(POSTPROC_RESULT_MEM_ADDR(image_p));
-    len = sizeof(struct imagenet_result_s) * IMAGENET_TOP_MAX;
-    memcpy(result_p, gp->temp, len);
-    return len;
-}
-
 int post_imgnet_classification(int model_id, struct kdp_image_s *image_p)
 {
     struct imagenet_post_globals_s *gp = &u_globals.imgnet;
@@ -477,17 +440,14 @@ int post_imgnet_classification(int model_id, struct kdp_image_s *image_p)
     int ch = POSTPROC_OUT_NODE_CH(image_p, 0);
 
     /* Convert to float */
-    printf("float data: \n");
     scale = POSTPROC_OUT_NODE_SCALE(image_p, 0);
     div = 1 << POSTPROC_OUT_NODE_RADIX(image_p, 0);
     for (i = 0; i < ch; i++) {
         gp->temp[i].index = i;
         gp->temp[i].score = (float)*src_p;
         gp->temp[i].score = do_div_scale(gp->temp[i].score, div, scale);
-        printf("saving %.5f, \n", gp->temp[i].score);
         src_p += data_size + w_bytes_to_skip;
     }
-    printf("\n");
 
     softmax(gp->temp, ch);
     qsort(gp->temp, ch, sizeof(struct imagenet_result_s), inet_comparator);
@@ -496,4 +456,93 @@ int post_imgnet_classification(int model_id, struct kdp_image_s *image_p)
     len = sizeof(struct imagenet_result_s) * IMAGENET_TOP_MAX;
     memcpy(result_p, gp->temp, len);
     return len;
+}
+
+float get_float(int h, int w, int c, int image_p_h, int image_p_w, int image_p_c, float *res_float_array){
+    return res_float_array[h*image_p_c*image_p_w + c*image_p_w + w];
+}
+
+int post_processing_simplest(int model_id, struct kdp_image_s *image_p, float *res_float_array, int res_float_array_max, int *res_float_len)
+{
+    struct imagenet_post_globals_s *gp = &u_globals.imgnet;
+    uint8_t *result_p;
+    int w, c, h, len, data_size, div, image_p_w, image_p_c, image_p_h;
+    float scale;
+
+    data_size = (POSTPROC_OUTPUT_FORMAT(image_p) & BIT(0)) + 1;     /* 1 or 2 in bytes */
+
+    int8_t *src_p = (int8_t *)POSTPROC_OUT_NODE_ADDR(image_p, 0);
+    image_p_w = POSTPROC_OUT_NODE_COL(image_p, 0);
+    image_p_c = POSTPROC_OUT_NODE_CH(image_p, 0);
+    image_p_h = POSTPROC_OUT_NODE_ROW(image_p, 0);
+
+    if (image_p_w * image_p_c * image_p_h >= res_float_array_max)
+    {
+        printf("nerual output size greater than res_float_array_max\n");
+        return 0;
+    }
+
+    scale = POSTPROC_OUT_NODE_SCALE(image_p, 0);
+    div = 1 << POSTPROC_OUT_NODE_RADIX(image_p, 0);
+    printf("(w, c, h) = %d, %d, %d\n", image_p_w, image_p_c, image_p_h);
+
+    int image_p_w_aligned = round_up(image_p_w);
+
+    *res_float_len = 0;
+    for(h=0; h<image_p_h; ++h){
+        for(c=0; c<image_p_c; ++c){
+            for(w=0; w<image_p_w; ++w){
+                int ind = h*image_p_c*image_p_w + c*image_p_w + w;
+                res_float_array[ind] = (float)*src_p;
+                res_float_array[ind] = do_div_scale(res_float_array[ind], div, scale);
+                *res_float_len += 1;
+                src_p += data_size;
+            }
+            src_p += data_size*(image_p_w_aligned-image_p_w);
+        }
+    }
+    return 0;
+}
+
+int post_processing_sigmoid(int model_id, struct kdp_image_s *image_p, float *res_float_array, int res_float_array_max, int *res_float_len)
+{
+    struct imagenet_post_globals_s *gp = &u_globals.imgnet;
+    uint8_t *result_p;
+    int w, c, h, len, data_size, div, image_p_w, image_p_c, image_p_h;
+    float scale;
+
+    data_size = (POSTPROC_OUTPUT_FORMAT(image_p) & BIT(0)) + 1;     /* 1 or 2 in bytes */
+
+    int8_t *src_p = (int8_t *)POSTPROC_OUT_NODE_ADDR(image_p, 0);
+    image_p_w = POSTPROC_OUT_NODE_COL(image_p, 0);
+    image_p_c = POSTPROC_OUT_NODE_CH(image_p, 0);
+    image_p_h = POSTPROC_OUT_NODE_ROW(image_p, 0);
+
+    if (image_p_w * image_p_c * image_p_h >= res_float_array_max)
+    {
+        printf("nerual output size greater than res_float_array_max\n");
+        return 0;
+    }
+
+    scale = POSTPROC_OUT_NODE_SCALE(image_p, 0);
+    div = 1 << POSTPROC_OUT_NODE_RADIX(image_p, 0);
+    printf("(w, c, h) = %d, %d, %d\n", image_p_w, image_p_c, image_p_h);
+
+    int image_p_w_aligned = round_up(image_p_w);
+
+    *res_float_len = 0;
+    for(h=0; h<image_p_h; ++h){
+        for(c=0; c<image_p_c; ++c){
+            for(w=0; w<image_p_w; ++w){
+                int ind = h*image_p_c*image_p_w + c*image_p_w + w;
+                res_float_array[ind] = (float)*src_p;
+                res_float_array[ind] = do_div_scale(res_float_array[ind], div, scale);
+                res_float_array[ind] = sigmoid(res_float_array[ind]);
+                *res_float_len += 1;
+                src_p += data_size;
+            }
+            src_p += data_size*(image_p_w_aligned-image_p_w);
+        }
+    }
+    return 0;
 }

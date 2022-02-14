@@ -22,9 +22,9 @@
 
   
 
-* 將 **Main.ipynb** 全部執行完畢產生一個**model57.h**檔案
+* 將 **Main.ipynb** 全部執行完畢產生一個**model01.h**檔案
 
-* 將**model57.h**移動到**data1/model57**中
+* 將**model01.h**移動到**data1/model01**中
 
 * 將整個**data1**資料夾移動到**~/data1**中(如果沒有data1請先建立)，等等要跟docker做共享
 
