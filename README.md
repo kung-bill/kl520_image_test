@@ -318,7 +318,7 @@
 
   結果如下
 
-  ![img03](.\readme_imgs\img03.png)
+  ![img03](./readme_imgs/img03.png)
 
 * 可以試試看不同圖片的結果，有些結果差異很大，有些很小
 
