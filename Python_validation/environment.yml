@@ -1,4 +1,4 @@
-name: MobileNetV2
+name: test_env
 channels:
   - conda-forge
   - defaults
@@ -169,4 +169,4 @@ dependencies:
     - numpy==1.17.0
     - opencv-python==4.5.4.60
     - pyyaml==6.0
-prefix: /home/kung/anaconda3/envs/MobileNetV2
+prefix: /home/kung/anaconda3/envs/test_env

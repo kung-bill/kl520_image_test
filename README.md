@@ -6,7 +6,11 @@
   cd Python_validation
   ```
 
-* 用conda搭建已經做好的環境(名稱為Drowsy)
+* 用conda搭建已經做好的環境(名稱為test_env)
+
+  將 ``environment.yml``的最後一行
+
+  ``prefix: /home/kung/anaconda3/envs/test_env`` 中的 \<kung\> 改成自己的 username 
 
   ``` shell
   conda env create -f environment.yml
@@ -15,12 +19,18 @@
 * 啟用環境
 
   ``` 
-  conda activate Drowsy
+  conda activate test_env
   ```
 
-* 在路徑下打開jupyter notebook
+* 啟用jupyter-lab  (port=8989 可以取自己喜歡的port)
 
-  
+  ```
+  jupyter-lab --ip=0.0.0.0 --port=8989
+  ```
+
+* 點選左側 **Main.ipynb**
+
+  ![img01](./readme_imgs/img01.png)
 
 * 將 **Main.ipynb** 全部執行完畢產生一個**model01.h**檔案
 
