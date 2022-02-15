@@ -35,14 +35,14 @@ float get_float(int h, int w, int c, int image_p_h, int image_p_w, int image_p_c
 extern "C" {
 #endif
 
-#define DME_MODEL_FILE      (HOST_LIB_DIR "/input_models/KL520/test_model01/models_520.nef")
+#define DME_MODEL_FILE      (HOST_LIB_DIR "/input_models/KL520/test_model/models_520.nef")
 
-#define DME_IMG_SIZE (100 * 100 * 2)
+#define DME_IMG_SIZE (224 * 224 * 2)
 #define DME_MODEL_SIZE (20 * 1024 * 1024)
 #define DME_FWINFO_SIZE 128
 
-#define MODEL_IMG_W 100
-#define MODEL_IMG_H 100
+#define MODEL_IMG_W 224
+#define MODEL_IMG_H 224
 #define INFERENCE_IMG_SIZE (MODEL_IMG_W * MODEL_IMG_H * 2)
 
 void get_detection_res(int dev_idx, uint32_t inf_size, struct post_parameter_s post_par)
@@ -87,7 +87,6 @@ void get_detection_res(int dev_idx, uint32_t inf_size, struct post_parameter_s p
     }            
     
     // Do postprocessing
-    //post_imgnet_classification(0, image_p);
     int res_float_array_max = 30000;
     float *res_float_array = (float*)malloc(sizeof(float)*res_float_array_max);
     int *res_float_len = (int*)malloc(sizeof(int));
@@ -99,24 +98,10 @@ void get_detection_res(int dev_idx, uint32_t inf_size, struct post_parameter_s p
     int image_p_w = p_node_info->width;
     int image_p_c = p_node_info->channel;
 
-    // for model_simple_test1.h5
-    int test_arr_len = 24;
-    int test_arr[test_arr_len] = {0, 3, 2, 1, 3, 2, 3, 3, 1, 3, 0, 1, 0, 3, 0, 2, 1, 1, 3, 0, 1, 0, 3, 2};
+ 
+    for (int c = 0; c < image_p_c; ++c){
+        printf("(h,w,c)=(%d, %d, %d), %f\n", 0, 0, c, get_float(0, 0, c, image_p_h, image_p_w, image_p_c, res_float_array));
 
-
-    // for model_simple_test2.h5
-    // int test_arr_len = 27;
-    // int test_arr[test_arr_len] = {0, 0, 0, 0, 1, 1, 0, 2, 1, 3, 3, 2, 4, 4, 0, 6, 6, 1, 2, 2, 2, 5, 5, 0, 9, 9, 1};
-
-    
-
-    for (int i = 0; i < test_arr_len/3; ++i)
-    {
-        int h, w, c;
-        h = test_arr[i * 3 + 0];
-        w = test_arr[i * 3 + 1];
-        c = test_arr[i * 3 + 2];
-        printf("(h,w,c)=(%d, %d, %d), %f\n", h, w, c, get_float(h, w, c, image_p_h, image_p_w, image_p_c, res_float_array));
     }
 
     free(image_p);
@@ -174,7 +159,7 @@ int user_test_dme(int dev_idx, struct post_parameter_s post_par, \
         char *inf_res = (char *)malloc(256*1024);
 
         cv::Mat img, img_resized, img565;
-        img = cv::imread("../../input_images/images/test_img_4.jpg");
+        img = cv::imread("../../images/birdman.bmp");
 
         //image resize
 	    cv::Size size(MODEL_IMG_W, MODEL_IMG_H);
@@ -232,7 +217,7 @@ int user_test(int dev_idx, int user_id)
                                | IMAGE_FORMAT_CHANGE_ASPECT_RATIO;
 
     // dme configuration
-    dme_cfg.model_id     = 34;// model id when compiling in toolchain
+    dme_cfg.model_id     = 1;// model id when compiling in toolchain
     dme_cfg.output_num   = 1;                             // number of output node for the model
     dme_cfg.image_col    = post_par.raw_input_col;
     dme_cfg.image_row    = post_par.raw_input_row;

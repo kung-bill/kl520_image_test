@@ -239,22 +239,18 @@
 
   ``` shell
   Kneron@ubuntu:~/Desktop/kl520_image_test$ ls
-  data1  images  KL_520_example  my_test_model  Python_validation  README.md
+  data1  images  KL_520_example  Python_validation  readme_imgs  README.md
   ```
 
 * 將我們自己做的**224*224**影像放入**host_lib**中
 
   ``` shell
-  cp -r data1/model57/images/ ~/Desktop/host_lib/
+  cp -r images/ ~/Desktop/host_lib/
   ```
 
-* 將我們自己compile的模型檔案(.nef)放入**host_lib**中
+* 將我們自己compile的模型檔案(.nef)放入**host_lib/input_models/KL520/test_model/**中
 
-  ``` shell
-  cp -r my_test_model/ ~/Desktop/host_lib/input_models/KL520/
-  ```
-
-* 將自己寫的**kl520_dme_image_inference_example**放入**host_lib**中
+* 將自己寫的**kl520_dme_simplest_feature_test**放入**host_lib**中
 
   ``` shell
   cd KL_520_example/
@@ -297,7 +293,7 @@
   lsusb
   ```
 
-  如果有連結到會出現以下結果
+  如果有連結到會出現以下結果 (**ID 3231:0100 就是 KL520**)
 
   ```
   Kneron@ubuntu:~/Desktop/host_lib/build/bin$ lsusb
@@ -315,13 +311,15 @@
 
   ``` shell
   cd bin
-  ./kl520_dme_image_inference_example
+  ./kl520_dme_simplest_feature_test
   ```
 
 * 滑鼠點擊跳出的影像視窗，隨便鍵盤按一個按鍵，就可以結束**inference**
 
   結果如下
 
-  ![result](https://raw.githubusercontent.com/kung-bill/kl520_image_test/master/result.png)
+  ![img03](C:\Users\BK\Desktop\kl520_image_test\readme_imgs\img03.png)
 
 * 可以試試看不同圖片的結果，有些結果差異很大，有些很小
+
+* 如果要得到較準確的結果需要再 data1/的images 中放100張以上的影像，讓tool chain做quantization
