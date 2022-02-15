@@ -36,29 +36,29 @@
 
 * 將**model01.h**移動到**data1/model01**中
 
-* 將整個**data1**資料夾移動到**~/data1**中(如果沒有data1請先建立)，等等要跟docker做共享
+* 將整個**data1**資料夾移動到**\~/data1**中(如果沒有data1請先建立)，等等要跟docker做共享
 
-* 完成後**~/data1**的資料如下
+* 完成後**\~/data1**的資料如下
   ``` shell
-  (base) raoblack@raoblack-Lenovo-IdeaPad-S540-13ARE:~/data1$ tree .
+  (base) kung@kung-ntu103:~/data1$ tree
   .
   ├── batch_input_params.json
   ├── input_params.json
-  └── model57
-    ├── images
-    │   ├── man.bmp
-    │   ├── one_bike_many_cars_224x224.bmp
-    │   ├── testA.bmp
-    │   ├── testB.bmp
-    │   ├── testC.bmp
-    │   ├── testD.bmp
-    │   ├── testE.bmp
-    │   ├── testF.bmp
-    │   ├── testG.bmp
-    │   ├── testH.bmp
-    │   └── testI.bmp
-    └── model57.h5
-  
+  └── model01
+      ├── images
+      │   ├── birdman.bmp
+      │   ├── img01.bmp
+      │   ├── img02.bmp
+      │   ├── img03.bmp
+      │   ├── img04.bmp
+      │   ├── img05.bmp
+      │   ├── img06.bmp
+      │   ├── img07.bmp
+      │   ├── img08.bmp
+      │   ├── img09.bmp
+      │   ├── img10.bmp
+      │   └── img11.bmp
+      └── model01.h5
   ```
 ### 2. 用KL520 toolchain 產生可以.nef model檔
 
@@ -68,10 +68,10 @@
   docker pull kneron/toolchain:v0.14.1
   ```
 
-* 將本機的的 ~/data1 資料夾 map 到 docker toolchain520中的 /data1 將docker run 起來 關掉就直接刪除container (raoblack改成自己的使用者名稱)
+* 將本機的的 ~/data1 資料夾 map 到 docker toolchain520中的 /data1 將docker run 起來 關掉就直接刪除container (\<kung>改成自己的使用者名稱)
 
   ``` shell
-  docker run --rm -it -v /home/raoblack/data1:/data1 kneron/toolchain:v0.14.1
+  docker run --rm -it -v /home/kung/data1:/data1 kneron/toolchain:v0.14.1
   ```
 
 * 此步驟之後都在docker中操作
@@ -79,31 +79,31 @@
 * keras h5 轉成 onnx
 
   ``` shell
-  python /workspace/scripts/convert_model.py keras /data1/model57/model57.h5 /data1/model57/model57.h5.onnx
+  python /workspace/scripts/convert_model.py keras /data1/model01/model01.h5 /data1/model01/model01.h5.onnx
   ```
 
-* 此時檔案結構如下
+* 此時**data1**中檔案結構如下
 
   ``` shell
-  (base) raoblack@raoblack-Lenovo-IdeaPad-S540-13ARE:~/data1$ tree
   .
   ├── batch_input_params.json
   ├── input_params.json
-  └── model57
+  └── model01
       ├── images
-      │   ├── man.bmp
-      │   ├── one_bike_many_cars_224x224.bmp
-      │   ├── testA.bmp
-      │   ├── testB.bmp
-      │   ├── testC.bmp
-      │   ├── testD.bmp
-      │   ├── testE.bmp
-      │   ├── testF.bmp
-      │   ├── testG.bmp
-      │   ├── testH.bmp
-      │   └── testI.bmp
-      ├── model57.h5
-      └── model57.h5.onnx
+      │   ├── birdman.bmp
+      │   ├── img01.bmp
+      │   ├── img02.bmp
+      │   ├── img03.bmp
+      │   ├── img04.bmp
+      │   ├── img05.bmp
+      │   ├── img06.bmp
+      │   ├── img07.bmp
+      │   ├── img08.bmp
+      │   ├── img09.bmp
+      │   ├── img10.bmp
+      │   └── img11.bmp
+      ├── model01.h5
+      └── model01.h5.onnx
   ```
 
 * **fpAnalyserCompiler** (For KDP520)
@@ -115,10 +115,10 @@
   成功會出現
 
   ``` 
-  [piano][warning][graph_gen.cc:85][GenerateGraph] Model [/data1/fpAnalyser/model57.h5.quan.wqbi.bie] is BIE, skip optimization config
+  [piano][warning][graph_gen.cc:85][GenerateGraph] Model [/data1/fpAnalyser/model01.h5.quan.wqbi.bie] is BIE, skip optimization config
   ```
 
-* 此時檔案結構如下
+* 此時**data1**中檔案結構如下
 
   ``` shell
   .
@@ -130,29 +130,22 @@
   │   ├── setup.bin
   │   └── weight.bin
   ├── fpAnalyser
-  │   └── model57.h5.quan.wqbi.bie
+  │   └── model01.h5.quan.wqbi.bie
   ├── input_params.json
-  └── model57
+  └── model01
       ├── images
-      │   ├── man.bmp
-      │   ├── one_bike_many_cars_224x224.bmp
-      │   ├── testA.bmp
-      │   ├── testB.bmp
-      │   ├── testC.bmp
-      │   ├── testD.bmp
-      │   ├── testE.bmp
-      │   ├── testF.bmp
-      │   ├── testG.bmp
-      │   ├── testH.bmp
-      │   └── testI.bmp
-      ├── model57.h5
-      └── model57.h5.onnx
+      │   ├── birdman.bmp
+      │   ├   ...
+      │   ├── img10.bmp
+      │   └── img11.bmp
+      ├── model01.h5
+      └── model01.h5.onnx
   ```
 
 * Compiler and Evaluator
 
   ``` shell
-  cd /workspace/scripts && ./compilerIpevaluator_520.sh /data1/model57/model57.h5.onnx
+  cd /workspace/scripts && ./compilerIpevaluator_520.sh /data1/model01/model01.h5.onnx
   ```
 
   成功出現以下
@@ -169,20 +162,19 @@
   python /workspace/scripts/batchCompile_520.py
   ```
   
-  成功出現以下訊息
+  成功出現以下訊息 (綠色字體)
   
   ``` 
-  [tool][info][batch_compile.cc:701][VerifyOutput]      addr: 0x603427f0, size: 0xa0
+  [tool][info][batch_compile.cc:701][VerifyOutput]      addr: 0x60345b30, size: 0xa0
   [tool][info][batch_compile.cc:704][VerifyOutput] 
   
-  [tool][info][batch_compile.cc:708][VerifyOutput]   end addr 0x60342890, 
-  [tool][info][batch_compile.cc:710][VerifyOutput] total bin size 0x2a8840
+  [tool][info][batch_compile.cc:708][VerifyOutput]   end addr 0x60345bd0, 
+  [tool][info][batch_compile.cc:710][VerifyOutput] total bin size 0x2abae0
   ```
   
 * 此時檔案結構如下
 
   ``` shell
-  (base) raoblack@raoblack-Lenovo-IdeaPad-S540-13ARE:~/data1$ tree
   .
   ├── batch_compile
   │   ├── all_models.bin
@@ -192,11 +184,11 @@
   │   ├── compile.log
   │   ├── fw_info.bin
   │   ├── fw_info.txt
-  │   ├── model57_config.json
-  │   ├── model57_modelid_57_command.bin
-  │   ├── model57_modelid_57_ioinfo.csv
-  │   ├── model57_modelid_57_setup.bin
-  │   ├── model57_modelid_57_weight.bin
+  │   ├── model01_config.json
+  │   ├── model01_modelid_1_command.bin
+  │   ├── model01_modelid_1_ioinfo.csv
+  │   ├── model01_modelid_1_setup.bin
+  │   ├── model01_modelid_1_weight.bin
   │   └── models_520.nef
   ├── batch_input_params.json
   ├── compiler
@@ -206,23 +198,15 @@
   │   ├── setup.bin
   │   └── weight.bin
   ├── fpAnalyser
-  │   └── model57.h5.quan.wqbi.bie
+  │   └── model01.h5.quan.wqbi.bie
   ├── input_params.json
-  └── model57
+  └── model01
       ├── images
-      │   ├── man.bmp
-      │   ├── one_bike_many_cars_224x224.bmp
-      │   ├── testA.bmp
-      │   ├── testB.bmp
-      │   ├── testC.bmp
-      │   ├── testD.bmp
-      │   ├── testE.bmp
-      │   ├── testF.bmp
-      │   ├── testG.bmp
-      │   ├── testH.bmp
-      │   └── testI.bmp
-      ├── model57.h5
-      └── model57.h5.onnx
+      │   ├── birdman.bmp
+      │   ├──   ....
+      │   └── img11.bmp
+      ├── model01.h5
+      └── model01.h5.onnx
   ```
 
 * 關掉 KL520 toolchain 的**container**
@@ -231,14 +215,19 @@
   exit
   ```
 
-* 複製**~/data1/batch_compile/models_520.nef** 到 **my_test_model**中，可以覆蓋掉之前的
+* **~/data1/batch_compile/models_520.nef** 就是我們要在kl520 上面跑得model
 
-### 3. 到Kneron提供的vm中驗證結果
+### 3. 在vm上用kl520 inference
+
 * 到http://doc.kneron.com/docs/#520_1.4.0.0/getting_start/ 下載vm，然後用vmware打開
 
-* 順便到 https://www.kneron.com/tw/support/developers/ 的**KNEO Stem (USB Dongle)**項目中，下載host_lib，這裡示範的版本為**host_lib_v0.9.1.zip**
+* 順便到 https://www.kneron.com/tw/support/developers/ 的**KNEO Stem (USB Dongle)**項目中，下載host_lib，這裡示範的版本為**host_lib_v1.0.0.zip**
 
-* 打開vmware，打開vm，密碼是 Kneron
+  ![img02](/home/kung/Workspace/kl520_image_test/readme_imgs/img02.png)**
+
+  
+
+* 打開vmware，打開vm，密碼是 **Kneron**
 
 * 在這裡我們將host_lib解壓縮到vm的桌面上，路徑為**~/Desktop/host_lib/**
 
