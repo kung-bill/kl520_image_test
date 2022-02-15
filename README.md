@@ -252,6 +252,7 @@
    ``` shell
    mkdir ~/Desktop/host_lib/input_models/KL520/test_model/
    ```
+   
 * 將自己寫的**kl520_dme_simplest_feature_test**放入**host_lib**中
 
   ``` shell
@@ -322,9 +323,31 @@
 
   ![img03](./readme_imgs/img03.png)
 
-* 可以試試看不同圖片的結果
+* 在 **\Python_validation\Main.ipynb** 中的結果
+
+  ![img03-2](./readme_imgs/img03-2.png)
+
+* 用不同圖片 inference
   
+  將**kl520_dme_simplest_feature_test.cpp**的第163行註解，並且開啟164行，使用不同的影像作inference
+  
+  ![img03](./readme_imgs/img04.png)
+  
+* 重新編譯並執行
 
+   ```shell
+   cd ..
+   make -j4
+   cd bin
+   ./kl520_dme_simplest_feature_test
+   ```
 
+* 執行結果如下
 
-* 如果要得到較準確的結果需要再 data1/的images 中放100張以上的影像，讓tool chain做quantization
+   ![img03](./readme_imgs/img05.png)
+
+* 在 **\Python_validation\Main.ipynb** 中的結果
+
+  ![img05-2](./readme_imgs/img05-2.png)
+
+* 若想得到更精準的結果需要再 data1/的images 中放與inference 更相似的圖片，讓tool chain做更好的quantization
