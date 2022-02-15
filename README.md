@@ -249,7 +249,9 @@
   ```
 
 * 將我們自己compile的模型檔案(.nef)放入**host_lib/input_models/KL520/test_model/**中
-
+   ``` shell
+   mkdir ~/Desktop/host_lib/input_models/KL520/test_model/
+   ```
 * 將自己寫的**kl520_dme_simplest_feature_test**放入**host_lib**中
 
   ``` shell
@@ -320,6 +322,9 @@
 
   ![img03](./readme_imgs/img03.png)
 
-* 可以試試看不同圖片的結果，有些結果差異很大，有些很小
+* 可以試試看不同圖片的結果
+  
+
+
 
 * 如果要得到較準確的結果需要再 data1/的images 中放100張以上的影像，讓tool chain做quantization

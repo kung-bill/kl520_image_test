@@ -159,11 +159,13 @@ int user_test_dme(int dev_idx, struct post_parameter_s post_par, \
         char *inf_res = (char *)malloc(256*1024);
 
         cv::Mat img, img_resized, img565;
-        img = cv::imread("../../images/birdman.bmp");
+        
+        // img = cv::imread("../../images/birdman.bmp");
+        img = cv::imread("../../images/img09.bmp");
 
         //image resize
-	    cv::Size size(MODEL_IMG_W, MODEL_IMG_H);
-        cv::resize(img, img, size);
+	    // cv::Size size(MODEL_IMG_W, MODEL_IMG_H);
+        
 
         cvtColor(img, img565, CV_BGR2BGR565);
         IplImage ipl_img;
@@ -209,12 +211,11 @@ int user_test(int dev_idx, int user_id)
     struct kdp_dme_cfg_s dme_cfg = create_dme_cfg_struct();
     
     // parameters for postprocessing
-    post_par.raw_input_col   = 100;
-    post_par.raw_input_row   = 100;
+    post_par.raw_input_col   = 224;
+    post_par.raw_input_row   = 224;
     post_par.model_input_col = post_par.raw_input_col;
     post_par.model_input_row = post_par.raw_input_row;
-    post_par.image_format    = IMAGE_FORMAT_SUB128 | NPU_FORMAT_RGB565 | IMAGE_FORMAT_RAW_OUTPUT \
-                               | IMAGE_FORMAT_CHANGE_ASPECT_RATIO;
+    post_par.image_format    = IMAGE_FORMAT_SUB128 | NPU_FORMAT_RGB565 | IMAGE_FORMAT_RAW_OUTPUT;
 
     // dme configuration
     dme_cfg.model_id     = 1;// model id when compiling in toolchain
