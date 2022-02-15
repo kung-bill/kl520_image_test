@@ -223,7 +223,7 @@
 
 * 順便到 https://www.kneron.com/tw/support/developers/ 的**KNEO Stem (USB Dongle)**項目中，下載host_lib，這裡示範的版本為**host_lib_v1.0.0.zip**
 
-  ![img02](/home/kung/Workspace/kl520_image_test/readme_imgs/img02.png)**
+  ![img02](./readme_imgs/img02.png)**
 
   
 
@@ -318,7 +318,7 @@
 
   結果如下
 
-  ![img03](C:\Users\BK\Desktop\kl520_image_test\readme_imgs\img03.png)
+  ![img03](.\readme_imgs\img03.png)
 
 * 可以試試看不同圖片的結果，有些結果差異很大，有些很小
 
